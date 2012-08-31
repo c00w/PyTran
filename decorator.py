@@ -5,7 +5,7 @@ import ce
 
 def call_func(func, data):
     old_ce = ce.get() 
-    new_ce = func(old_ce, data)
+    new_ce = func(copy(old_ce), data)
     return ce.update(old_ce, new_ce)
 
 def listen(socket, func):
