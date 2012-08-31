@@ -20,6 +20,6 @@ def event(socket, size=1):
     def decorator(func):
         item = Input(socket, size)
         t = Thread(target=listen, args = (item, func))
-        t.daemon = False
+        t.daemon = True 
         t.start()
     return decorator
