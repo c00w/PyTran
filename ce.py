@@ -6,7 +6,6 @@ from pprint import pprint
 lock = Lock()
 
 class CE():
-    index = 0
     data = defaultdict(lambda: None) 
     new_data = defaultdict(lambda: None) 
 
@@ -24,7 +23,6 @@ class CE():
     def commit(self):
         self.data = new_data
         self.new_data = defaultdict(lambda: None) 
-        index += 1
 
     def changed(self):
         return self.new_data.keys()

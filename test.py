@@ -10,7 +10,6 @@ def test_ce_writing():
     @event(buffer1)
     def func1(ce, data):
         ce['d'] = data
-        return ce
 
 
     sleep(0)
@@ -18,5 +17,26 @@ def test_ce_writing():
     @event(buffer2)
     def func2(ce, data):
         assert ce['d'] == 'a'
-        return ce
     sleep(0)   
+
+
+def test_gen():
+    def test_func():
+        yield 'test'
+        yield 'test'
+        yield 'end'
+
+    i = 3 
+
+    @event(test_func())
+    def func3(ce, data):
+        i -= 1
+        if 'data' == 'end':
+            assert ce['done'] == True
+            return
+        if ce['flag'] != True:
+            ce['flag'] == True
+        else:
+            ce['done'] = True
+        if i == 0:
+            assert False

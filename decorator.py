@@ -1,25 +1,24 @@
-from input import Input
 from threading import current_thread, Thread
 from copy import copy
 import ce
 
 def call_func(func, data):
-    old_ce = ce.get() 
-    new_ce = func(copy(old_ce), data)
-    return ce.update(old_ce, new_ce)
+    new_ce = ce.get()
+    func(new_ce, data)
+    return ce.update(new_ce)
 
-def listen(socket, func):
+def handle_message(func, message):
+    while not call_func(func, message):
+        pass
+
+def listen(func, gen):
     while True:
-        data = socket.read(current_thread())
-        if call_func(func, data):
-            socket.commit(current_thread())
-        else:
-            socket.cancel(current_thread())
+        for item in gen:
+            handle_message(func, item)
 
-def event(socket, size=1):
+def event(gen, size=1):
     def decorator(func):
-        item = Input(socket, size)
-        t = Thread(target=listen, args = (item, func))
+        t = Thread(target=listen, args = (gen, func))
         t.daemon = True 
         t.start()
     return decorator
